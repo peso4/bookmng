@@ -1,0 +1,48 @@
+<html>
+	<meta charset="utf-8"/>
+<script>
+	function BookSearch( ins_title )
+	{
+		console.log(ins_title);
+		var request = new XMLHttpRequest();
+		
+		request.open('GET', 'https://www.googleapis.com/books/v1/volumes?q=' + ins_title, true);
+		
+		request.responseType = 'json';
+
+		request.onload = HandleResponse;
+
+		request.send();
+	}
+	function HandleResponse()
+	{
+		var response = this.response;
+		console.log(response);
+		document.getElementById("content").innerHTML = "";
+		for (var i = 0; i < response.items.length; i++)
+		{
+			var item = response.items[i];
+			// in production code, item.text should have the HTML entities escaped.
+			document.getElementById("content").innerHTML += "<br>" + item.volumeInfo.title;
+		}
+	}
+	function GetTitle()
+	{
+		return document.getElementById("word").value;
+	}
+</script>
+
+<head>
+	<title>Books API Example</title>
+</head>
+
+<body>
+	<textarea id="word"></textarea>
+	<br>
+	<button onclick="BookSearch( GetTitle() );">検索</button>
+	<!-- <script src="https://www.googleapis.com/books/v1/volumes?q=harry+potter&callback=handleResponse"></script> -->
+	<div id="content"></div>
+	
+</body>
+
+</html>
